@@ -1,0 +1,98 @@
+﻿@page "/products"
+
+@using System.Net.Http.Json
+@using TokoShop.WebApp.Models.Products;
+@inject HttpClient httpClient
+
+<MudContainer Class="mt-2 px-8" MaxWidth="MaxWidth.False">
+    <MudBreadcrumbs Items="_breadcrumbs">
+        <ItemTemplate Context="item">
+            <MudLink Href="@item.Href">@item.Text.ToUpper()</MudLink>
+        </ItemTemplate>
+    </MudBreadcrumbs>
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<Meal>>>(ServerReload))"
+              Dense="true" Hover="true" @ref="table">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Seafoods</MudText>
+            <MudSpacer />
+            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Image</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name_field" T="Meal">Name</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Image"><MudImage Height="40" Src="@context.StrMealThumb"></MudImage></MudTd>
+            <MudTd DataLabel="Name">@context.StrMeal</MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>No matching records found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudContainer>
+
+@code {
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Products", href: null, disabled: true)
+    };
+
+    private IEnumerable<Meal> pagedData;
+    private MudTable<Meal> table;
+
+    private int totalItems;
+    private string searchString = null;
+
+    private async Task<TableData<Meal>> ServerReload(TableState state)
+    {
+        var rootData = await httpClient.GetFromJsonAsync<MealRoot>("https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood");
+        var data = rootData.Meals;
+        await Task.Delay(300);
+
+        data = data?.Where(element =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+
+            if (element.StrMeal?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true)
+                return true;
+            if ($"{element.StrMeal}".Contains(searchString))
+                return true;
+            return false;
+        }).ToList();
+
+        if (data != null)
+        {
+            totalItems = data.Count();
+            IOrderedEnumerable<Meal>? orderedList = null;
+            switch (state.SortLabel)
+            {
+                case "name_field":
+                    orderedList = data.OrderByDirection(state.SortDirection, o => o.StrMeal);
+                    break;
+            }
+
+            if (orderedList != null)
+            {
+                data = orderedList.ToList();
+            }
+        }
+
+        pagedData =  (data?? new List<Meal>()).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        return new TableData<Meal>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+}
