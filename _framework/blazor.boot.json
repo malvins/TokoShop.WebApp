@@ -24,7 +24,7 @@
       "Microsoft.Extensions.Primitives.dll": "sha256-eXvGx2jcjpTPEJoAHBsW\/VuMPbNyyU+AsuhPmkzSSRY=",
       "Microsoft.JSInterop.dll": "sha256-PceS3GzMoFOjoaqqdj7Fa8hjMKvKzU3oYAqfxXRuVos=",
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-rCEiCTvZ4q9Hh8faiYWMd8w8UxYteM1bNxGJ376zsmU=",
-      "MudBlazor.dll": "sha256-ysUSjtsXw98bkeLUbMv7iYoDlbLQTASv8igSFSNfTLs=",
+      "MudBlazor.dll": "sha256-ApD+SQCOz7LUZZwGwmoLvlRUNwCSbnhP2N3W6cSbZpU=",
       "System.Collections.Concurrent.dll": "sha256-CCF4ZQkoZW5iqkuRDHbAnM91RQyDtSBbWJR4mfx9Zd8=",
       "System.Collections.dll": "sha256-4IVWNju2laMcqCTZrFn1Xk9Jk7juxjXrIrdwUecYWzU=",
       "System.ComponentModel.Annotations.dll": "sha256-o14RcWBpxPPuE3rGAeqjBuF2NJKzGgt1+3iFtRFRJkc=",
@@ -47,7 +47,7 @@
       "System.Text.Encodings.Web.dll": "sha256-cO\/W3bKcnHud2Z3v6bWFgRiXK3ju19iYodf6wDIn6m4=",
       "System.Text.Json.dll": "sha256-t4+vA1jrMOdsF\/JTtSl6wn7TaG92aQUjEEGjS3UNFgw=",
       "System.Text.RegularExpressions.dll": "sha256-FU8AHEsLVJvXKLzHaevabEKNuTXuQa1qO1SSzczWQMI=",
-      "TokoShop.WebApp.dll": "sha256-cCyErQbPKJ6gsaQMLWSqGH3yFYhq0DSPkoauIrt4l9Q="
+      "TokoShop.WebApp.dll": "sha256-gvXDpsdmg\/ow7IFEiQKJAp89sbnMYXJZUM8SrF\/AQSI="
     },
     "extensions": null,
     "lazyAssembly": null,
