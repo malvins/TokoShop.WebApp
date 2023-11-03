@@ -10,13 +10,38 @@
             <MudLink Href="@item.Href">@item.Text.ToUpper()</MudLink>
         </ItemTemplate>
     </MudBreadcrumbs>
+
+    <MudPaper Class="d-flex d-sm-none mt-2 mb-2 flex-row-reverse" Elevation="0">
+        <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" IconSize="Size.Small">
+            <MudButton>@_buttonText</MudButton>
+            <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown">
+                <MudMenuItem OnClick="() => SetButtonText(0)">Export</MudMenuItem>
+                <MudMenuItem OnClick="() => SetButtonText(1)">Import</MudMenuItem>
+                <MudMenuItem OnClick="() => SetButtonText(2)">New Product</MudMenuItem>
+            </MudMenu>
+        </MudButtonGroup>
+    </MudPaper>
     <MudTable ServerData="@(new Func<TableState, Task<TableData<Meal>>>(ServerReload))"
               Dense="true" Hover="true" @ref="table">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Seafoods</MudText>
-            <MudSpacer />
-            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudGrid Class="d-none d-sm-flex">
+                <MudItem xs="12" md="5">
+                    <MudText Typo="Typo.h6">Products</MudText>
+                </MudItem>
+                <MudItem xs="12" md="7">
+                    <MudPaper Class="d-none d-sm-flex flex-row flex-grow-4 gap-2" Elevation="0">
+                        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary">Import</MudButton>
+                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary">Export</MudButton>
+                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Product</MudButton>
+                    </MudPaper>                    
+                </MudItem>
+            </MudGrid>
+            <MudGrid Class="d-block d-sm-none">
+                <MudItem xs="12">
+                    <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </MudItem>
+            </MudGrid>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Image</MudTh>
@@ -39,6 +64,22 @@
 </MudContainer>
 
 @code {
+    private string _buttonText = "New Product";
+    private void SetButtonText(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                _buttonText = "Export";
+                break;
+            case 1:
+                _buttonText = "Import";
+                break;
+            case 2:
+                _buttonText = "New Product";
+                break;
+        }
+    }
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "/"),
