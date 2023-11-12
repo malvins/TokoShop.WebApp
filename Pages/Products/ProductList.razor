@@ -3,6 +3,7 @@
 @using System.Net.Http.Json
 @using TokoShop.WebApp.Models.Products;
 @inject HttpClient httpClient
+@inject NavigationManager NavigationManager
 
 <MudContainer Class="mt-2 px-8" MaxWidth="MaxWidth.False">
     <MudBreadcrumbs Items="_breadcrumbs">
@@ -33,7 +34,7 @@
                         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                         <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary">Import</MudButton>
                         <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary">Export</MudButton>
-                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Product</MudButton>
+                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick='() => NavigationManager.NavigateTo("products/add")'>New Product</MudButton>
                     </MudPaper>                    
                 </MudItem>
             </MudGrid>
