@@ -2,9 +2,10 @@
 @using System.ComponentModel.DataAnnotations;
 @using TokoShop.WebApp.Models.Products;
 @inject Services.IProductService ProductService
+@inject NavigationManager NavigationManager
 
 <MudContainer Class="mt-2 px-8" MaxWidth="MaxWidth.False">
-    <MudBreadcrumbs Items="_breadcrumbs">
+    <MudBreadcrumbs Items="BreadCrumbs">
         <ItemTemplate Context="item">
             <MudLink Href="@item.Href">@item.Text.ToUpper()</MudLink>
         </ItemTemplate>
@@ -12,34 +13,15 @@
     <MudGrid>
         <MudItem xs="12" sm="7">
             <MudPaper Class="pa-4">
-                <MudForm @ref="form" @bind-IsValid="@success" Model="@Product">
+                <MudForm @ref="form" @bind-IsValid="@IsSuccess" Model="@Product">
                     <MudTextField T="string" @bind-Value="Product.Name" Label="Name" For="@(() => Product.Name)" />
                     <MudTextField T="string" @bind-Value="Product.Description" Label="Description" Lines="4" For="@(() => Product.Description)" />
                     <MudTextField T="string" @bind-Value="Product.ImageUrl" Label="Image Url" For="@(() => Product.ImageUrl)" />
                 </MudForm>
             </MudPaper>
             <MudPaper Class="pa-4 mt-4">
-                <MudButton Variant="Variant.Filled" Disabled="@isAnyError" Color="Color.Primary" DisableElevation="true" OnClick="@(async ()=> await this.SubmitForm())">Save</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@IsAnyError" Color="Color.Primary" DisableElevation="true" OnClick="@(async ()=> await this.SubmitForm())">Save</MudButton>
                 <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(()=>form.ResetAsync())" Class="mx-2">Reset</MudButton>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="5">
-            <MudPaper Class="pa-4 mud-height-full">
-                <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
-                @if (success)
-                {
-                    <MudText Color="Color.Success">@validationResult</MudText>
-                }
-                else
-                {
-                    <MudText Color="@Color.Error">
-                        <ValidationSummary />
-                    </MudText>
-                }
-                @if (isAnyProducts)
-                {
-                    <MudText Color="Color.Success">Ada produk</MudText>
-                }
             </MudPaper>
         </MudItem>
     </MudGrid>
@@ -47,17 +29,19 @@
 
 @code {
     public IEnumerable<Product>? Products;
+    public bool IsSuccess;
+    public bool IsAnyError;
+    public MudForm form;
+    public string ValidationResult = "failed";
+
     private ProductFormModel Product { get; set; } = new ProductFormModel();
-    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>
+    private List<BreadcrumbItem> BreadCrumbs = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "/"),
         new BreadcrumbItem("Add Product", href: null, disabled: true)
     };
-    bool success;
-    bool isAnyError;
-    bool isAnyProducts;
-    MudForm form;
-    string validationResult = "failed";
+
+
     public class ProductFormModel
     {
         [Required]
@@ -74,19 +58,19 @@
 
     private void ValidChanged()
     {
-        isAnyError = !success;
+        IsAnyError = !IsSuccess;
     }
 
     private async Task SubmitForm()
     {
         this.form.Validate().Wait();
-        if (!this.success)
+        if (!this.IsSuccess)
         {
-            validationResult = string.Join(";", form.Errors);
+            this.ValidationResult = string.Join(";", form.Errors);
             return;
         }
 
-        validationResult = "oke";
+        ValidationResult = "oke";
         var product = new Product()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -94,7 +78,11 @@
                 Description = this.Product.Description,
                 ImageUrl = this.Product.ImageUrl
             };
-        await ProductService.AddProduct(product);
+        var result = await this.ProductService.AddProduct(product);
+        if (result)
+        {
+            NavigationManager.NavigateTo("products");
+        }
     }
 
     protected override async Task OnInitializedAsync()
@@ -102,8 +90,7 @@
         await base.OnInitializedAsync();
         if (this.Products?.Any() != true)
         {
-            this.Products = await ProductService.GetAllAsync();
-            isAnyProducts = this.Products.Any();
+            this.Products = await this.ProductService.GetAllAsync();
         }
     }
 }

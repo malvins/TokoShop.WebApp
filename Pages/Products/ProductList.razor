@@ -4,6 +4,7 @@
 @using TokoShop.WebApp.Models.Products;
 @inject HttpClient httpClient
 @inject NavigationManager NavigationManager
+@inject Services.IProductService ProductService
 
 <MudContainer Class="mt-2 px-8" MaxWidth="MaxWidth.False">
     <MudBreadcrumbs Items="_breadcrumbs">
@@ -22,7 +23,7 @@
             </MudMenu>
         </MudButtonGroup>
     </MudPaper>
-    <MudTable ServerData="@(new Func<TableState, Task<TableData<Meal>>>(ServerReload))"
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<Product>>>(ServerReload))"
               Dense="true" Hover="true" @ref="table">
         <ToolBarContent>
             <MudGrid Class="d-none d-sm-flex">
@@ -35,7 +36,7 @@
                         <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary">Import</MudButton>
                         <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary">Export</MudButton>
                         <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick='() => NavigationManager.NavigateTo("products/add")'>New Product</MudButton>
-                    </MudPaper>                    
+                    </MudPaper>
                 </MudItem>
             </MudGrid>
             <MudGrid Class="d-block d-sm-none">
@@ -46,11 +47,11 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Image</MudTh>
-            <MudTh><MudTableSortLabel SortLabel="name_field" T="Meal">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="Product">Name</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Image"><MudImage Height="40" Src="@context.StrMealThumb"></MudImage></MudTd>
-            <MudTd DataLabel="Name">@context.StrMeal</MudTd>
+            <MudTd DataLabel="Image"><MudImage Height="40" Src="@context.ImageUrl"></MudImage></MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
         </RowTemplate>
         <NoRecordsContent>
             <MudText>No matching records found</MudText>
@@ -66,6 +67,19 @@
 
 @code {
     private string _buttonText = "New Product";
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Products", href: null, disabled: true)
+    };
+
+    // private IEnumerable<Meal> pagedData;
+    private IEnumerable<Product> pagedData;
+    private MudTable<Product> table;
+
+    private int totalItems;
+    private string searchString = null;
+
     private void SetButtonText(int id)
     {
         switch (id)
@@ -81,55 +95,21 @@
                 break;
         }
     }
-    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>
+
+    private async Task<TableData<Product>> ServerReload(TableState state)
     {
-        new BreadcrumbItem("Home", href: "/"),
-        new BreadcrumbItem("Products", href: null, disabled: true)
-    };
-
-    private IEnumerable<Meal> pagedData;
-    private MudTable<Meal> table;
-
-    private int totalItems;
-    private string searchString = null;
-
-    private async Task<TableData<Meal>> ServerReload(TableState state)
-    {
-        var rootData = await httpClient.GetFromJsonAsync<MealRoot>("https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood");
-        var data = rootData.Meals;
         await Task.Delay(300);
-
-        data = data?.Where(element =>
+        var sort = new Dictionary<string, string>();
+        var sortDirection = state.SortDirection == SortDirection.Descending ? "desc" : "asc";
+        if (!string.IsNullOrEmpty(state.SortLabel))
         {
-            if (string.IsNullOrWhiteSpace(searchString))
-                return true;
-
-            if (element.StrMeal?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true)
-                return true;
-            if ($"{element.StrMeal}".Contains(searchString))
-                return true;
-            return false;
-        }).ToList();
-
-        if (data != null)
-        {
-            totalItems = data.Count();
-            IOrderedEnumerable<Meal>? orderedList = null;
-            switch (state.SortLabel)
-            {
-                case "name_field":
-                    orderedList = data.OrderByDirection(state.SortDirection, o => o.StrMeal);
-                    break;
-            }
-
-            if (orderedList != null)
-            {
-                data = orderedList.ToList();
-            }
+            sort.Add(state.SortLabel, sortDirection);
         }
 
-        pagedData =  (data?? new List<Meal>()).Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
-        return new TableData<Meal>() { TotalItems = totalItems, Items = pagedData };
+        var pageData = await this.ProductService.PaginateAsync(state.Page, state.PageSize, sort, this.searchString);
+        this.pagedData = pageData.Items;
+        this.totalItems = pageData.DataCount;
+        return new TableData<Product>() { TotalItems = totalItems, Items = pagedData };
     }
 
     private void OnSearch(string text)

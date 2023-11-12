@@ -4,15 +4,15 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 <MudLayout>
-    <MudAppBar Elevation="1">
+    <MudAppBar Elevation="1" Dense="true">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3">My App</MudText>
+        <MudText Typo="Typo.h6" Class="@lableClass">TokoShop</MudText>
         <MudSpacer/>
         <MudIconButton Icon="@Icons.Material.Filled.Person" Color="Color.Inherit"/>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="1">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">My App</MudText>
+        <MudDrawerHeader Dense="true" Style="background-color:var(--mud-palette-appbar-background); color:var(--mud-palette-appbar-text)">
+            <MudText Typo="Typo.h6">TokoShop</MudText>
         </MudDrawerHeader>
         <Navigation/>
     </MudDrawer>
@@ -22,10 +22,19 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
+    bool _drawerOpen;
+    string lableClass;
 
+    protected override Task OnInitializedAsync()
+    {
+        _drawerOpen = false;
+        lableClass = "ml-3";
+        return base.OnInitializedAsync();
+    }
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+
+        lableClass = _drawerOpen ? "d-none" : "ml-3";
     }
 }
