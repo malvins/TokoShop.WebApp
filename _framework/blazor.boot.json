@@ -32,7 +32,7 @@
       "Microsoft.Extensions.Primitives.dll": "sha256-37sOT2q\/DrdnyQETx\/pIpFbZORyL6Pjj8o9+QO4+G1c=",
       "Microsoft.JSInterop.dll": "sha256-XJ6Av7MMV1HfLHrDoKjFafDg3jBsx1BIPrhQiuP3TUg=",
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-0wK93XW6X4v3vvj9aswSF25HR8K+N15BXe\/JmmTXODw=",
-      "MudBlazor.dll": "sha256-LmL9BorG5rLEIMtHPKnNioNlW1gicxprGbPeb0brhbw=",
+      "MudBlazor.dll": "sha256-bOpnEeDvZpe8noJD7m\/JNx9cMS9uOdNzThcDmq+CODA=",
       "netstandard.dll": "sha256-RGfpx+bCMjEac9M+Z40ToEnLaJDaJFN\/qZ\/moM91i3Q=",
       "SQLitePCLRaw.batteries_v2.dll": "sha256-SpWcH6AEx3mi47y\/8+z8SCs0KBG9Zt+IdSIBfqkcpOw=",
       "SQLitePCLRaw.core.dll": "sha256-jjSDOD\/QnHlyKzPl4z\/D58DPObtme8UT2gFIwbBDGHc=",
@@ -86,7 +86,7 @@
       "System.Threading.dll": "sha256-Pk5WsOdEPHJXgVEuMA6iVt\/hR32\/xUv471bd7ucag7Q=",
       "System.Threading.Thread.dll": "sha256-avYFwkxZdOeYn1+JOZXglDMW8g\/Zvy1nHg+deufsOqY=",
       "System.Transactions.Local.dll": "sha256-qIx1\/+o8MlG3jWYOv8+\/oz5MPe26T4vtYPdTjkSzG84=",
-      "TokoShop.WebApp.dll": "sha256-A6yae7pAq5xexmwvxSvjcuThJh0\/YR2YcrpIlzQQW54="
+      "TokoShop.WebApp.dll": "sha256-da1YaErpklMXC66ftUXgWjetxaptmkWkGq4PU4dR6n0="
     },
     "extensions": null,
     "lazyAssembly": null,
