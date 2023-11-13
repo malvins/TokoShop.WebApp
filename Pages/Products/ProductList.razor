@@ -14,13 +14,10 @@
     </MudBreadcrumbs>
 
     <MudPaper Class="d-flex d-sm-none mt-2 mb-2 flex-row-reverse" Elevation="0">
-        <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" IconSize="Size.Small">
-            <MudButton>@_buttonText</MudButton>
-            <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown">
-                <MudMenuItem OnClick="() => SetButtonText(0)">Export</MudMenuItem>
-                <MudMenuItem OnClick="() => SetButtonText(1)">Import</MudMenuItem>
-                <MudMenuItem OnClick="() => SetButtonText(2)">New Product</MudMenuItem>
-            </MudMenu>
+        <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" OverrideStyles="true">
+            <MudButton Class="mr-1" IconSize="Size.Small" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary" OnClick="() => SetButtonText(0)">Import</MudButton>
+            <MudButton Class="mr-1" IconSize="Size.Small" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary">Export</MudButton>
+            <MudButton IconSize="Size.Small" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick='() => NavigationManager.NavigateTo("products/add")'>New Product</MudButton>
         </MudButtonGroup>
     </MudPaper>
     <MudTable ServerData="@(new Func<TableState, Task<TableData<Product>>>(ServerReload))"
@@ -41,17 +38,31 @@
             </MudGrid>
             <MudGrid Class="d-block d-sm-none">
                 <MudItem xs="12">
-                    <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    <MudTextField T="string" ValueChangedClass="mr-4" s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 </MudItem>
             </MudGrid>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Image</MudTh>
             <MudTh><MudTableSortLabel SortLabel="name" T="Product">Name</MudTableSortLabel></MudTh>
+            <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Image"><MudImage Height="40" Src="@context.ImageUrl"></MudImage></MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd>
+                <MudTooltip Text="Edit"><MudIconButton Color="Color.Primary" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Edit">Edit</MudIconButton></MudTooltip>
+                <MudTooltip Text="Delete"><MudIconButton Color="Color.Error" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Delete">Delete</MudIconButton></MudTooltip>
+                
+                
+                @* <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small">
+                    <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Color="Color.Primary">
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit">Edit</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete">Delete</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.AccessAlarm">Others</MudMenuItem>
+                    </MudMenu>
+                </MudButtonGroup> *@
+            </MudTd>
         </RowTemplate>
         <NoRecordsContent>
             <MudText>No matching records found</MudText>
@@ -114,7 +125,7 @@
 
     private void OnSearch(string text)
     {
-        searchString = text;
-        table.ReloadServerData();
+        this.searchString = text;
+        this.table.ReloadServerData();
     }
 }
