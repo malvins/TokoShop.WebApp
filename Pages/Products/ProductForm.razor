@@ -8,7 +8,7 @@
 <MudContainer Class="mt-2 px-8" MaxWidth="MaxWidth.False">
     <MudBreadcrumbs Items="BreadCrumbs">
         <ItemTemplate Context="item">
-            <MudLink Href="@item.Href">@item.Text.ToUpper()</MudLink>
+            <MudLink OnClick=@(() => NavigationManager.NavigateTo(item.Href ?? "/"))>@item.Text.ToUpper()</MudLink>
         </ItemTemplate>
     </MudBreadcrumbs>
     <MudGrid>
