@@ -12,8 +12,23 @@
     <link href="TokoShop.WebApp.styles.css" rel="stylesheet" /> -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: url('images/Cloudy.svg') no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+
+        .loader {
+            max-width: 100px;
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+        }
+    </style>
     <script>
-        debugger;
         var path = window.location.pathname.split('/');
         var base = document.getElementsByTagName('base')[0];
         if (window.location.host.includes('localhost')) {
@@ -34,37 +49,10 @@
 
 <body>
     <div id="app">
-        <div style="position:absolute; top:30vh; width:100%; text-align:center">
-            <h1>TokoShop By malvin</h1>
-            <div style="display:flex; gap:10px; justify-content:center; align-items:center">
-                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                     y="0px" width="24px" height="30px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;"
-                     xml:space="preserve">
-                    <rect x="0" y="10" width="4" height="10" fill="#333" opacity="0.2">
-                        <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s"
-                                    repeatCount="indefinite" />
-                        <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="0.6s"
-                                    repeatCount="indefinite" />
-                        <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.6s"
-                                         repeatCount="indefinite" />
-                    </rect>
-                    <rect x="8" y="10" width="4" height="10" fill="#333" opacity="0.2">
-                        <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.15s" dur="0.6s"
-                                    repeatCount="indefinite" />
-                        <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.15s" dur="0.6s"
-                                    repeatCount="indefinite" />
-                        <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.15s" dur="0.6s"
-                                    repeatCount="indefinite" />
-                     </rect>
-                    <rect x="16" y="10" width="4" height="10" fill="#333" opacity="0.2">
-                        <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.3s" dur="0.6s"
-                                    repeatCount="indefinite" />
-                        <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.3s" dur="0.6s"
-                                    repeatCount="indefinite" />
-                        <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.3s" dur="0.6s"
-                                         repeatCount="indefinite" />
-                     </rect>
-                </svg>
+        <div style="position:absolute; top:30vh; width:100%; text-align:center;color: #594ab3;">
+            <h1>TokoShop</h1>
+            <div class="loader">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" overflow="visible" fill="#594af5" stroke="none"><defs><rect id="loader" x="46.5" y="40" width="7" height="20" rx="2" ry="2" transform="translate(0 -30)" /></defs><use xlink:href="#loader" transform="rotate(30 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.08s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.08s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.08s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(60 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.17s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.17s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.17s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(90 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.25s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.25s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.25s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(120 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.33s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.33s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.33s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(150 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.42s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.42s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.42s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(180 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.50s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.50s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.50s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(210 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.58s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.58s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.58s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(240 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.67s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.67s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.67s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(270 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.75s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.75s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.75s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(300 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.83s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.83s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.83s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(330 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="0.92s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="0.92s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.92s" repeatCount="indefinite"></animate></use><use xlink:href="#loader" transform="rotate(360 50 50)"><animateTransform attributeName="transform" type="translate" additive="sum" dur="1s" begin="1.00s" repeatCount="indefinite" from="0 0" to="10"></animateTransform><animateTransform attributeName="transform" type="skewX" additive="sum" dur="1s" begin="1.00s" repeatCount="indefinite" from="0" to="20"></animateTransform><animate attributeName="opacity" values="0;1;0" dur="1s" begin="1.00s" repeatCount="indefinite"></animate></use></svg>
             </div>
         </div>
     </div>
