@@ -69,7 +69,7 @@ namespace TokoShop.WebApp.Services
                 result.Items = items;
                 result.DataCount = count;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;

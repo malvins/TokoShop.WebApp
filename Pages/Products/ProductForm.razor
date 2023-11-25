@@ -14,7 +14,7 @@
     <MudGrid>
         <MudItem xs="12" sm="7">
             <MudPaper Class="pa-4">
-                <MudText Align="Align.Center" Class="mb-n4">ReadOnly Form</MudText>
+                <MudText Align="Align.Center" Class="mb-n4">Product Form</MudText>
                 <MudForm @ref="form" @bind-IsValid="@IsSuccess" Model="@Product">
                     <MudTextField T="string" @bind-Value="Product.Name" Label="Name" For="@(() => Product.Name)" />
                     <MudTextField T="string" @bind-Value="Product.Description" Label="Description" Lines="2" For="@(() => Product.Description)" />

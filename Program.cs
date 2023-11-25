@@ -15,6 +15,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddSqliteWasmDbContextFactory<DataContext>(opts =>
     opts.UseSqlite("Data Source=toko.sqlite3"));
 

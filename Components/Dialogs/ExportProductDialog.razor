@@ -1,0 +1,50 @@
+﻿@using System.Text;
+@using TokoShop.WebApp.Services;
+@inject IFileService FileService
+<MudDialog>
+    <DialogContent>
+        <MudItem xs="12" md="3">
+            <MudRadioGroup @bind-SelectedOption="@_exportType">
+                <MudRadio Option="@("all")">Export All</MudRadio>
+                <MudRadio Disabled="@(true)" Option="@("filtered")">Export Filtered</MudRadio>
+            </MudRadioGroup>
+        </MudItem>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Export</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@typeparam T
+@code {
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public List<T>? Data { get; set; }
+    [Parameter] public string FileName { get; set; } = "mydata.csv";
+
+    private string _exportType = string.Empty;
+    private async Task Submit()
+    {
+        if (this.MudDialog == null)
+        {
+            return;
+        }
+        var csvString = string.Empty;
+        if (this.Data?.Any() == true)
+        {
+            csvString = FileService.CreateCSVString(this.Data);
+        }
+        await FileService.SaveAsAsync(this.FileName, Encoding.ASCII.GetBytes(csvString));
+        this.MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel()
+    {
+        if (this.MudDialog == null)
+        {
+            return;
+        }
+        this.MudDialog.Cancel();
+    }
+}

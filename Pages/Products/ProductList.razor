@@ -2,10 +2,12 @@
 @page "/TokoShopWebApp/products"
 
 @using System.Net.Http.Json
+@using TokoShop.WebApp.Components.Dialogs;
 @using TokoShop.WebApp.Models.Products;
 @inject HttpClient httpClient
 @inject NavigationManager NavigationManager
 @inject Services.IProductService ProductService
+@inject IDialogService DialogService
 
 <MudContainer Class="mt-2 px-8" MaxWidth="MaxWidth.False">
     <MudBreadcrumbs Items="_breadcrumbs">
@@ -16,13 +18,13 @@
 
     <MudPaper Class="d-flex d-sm-none mt-2 mb-2 flex-row-reverse" Elevation="0">
         <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" OverrideStyles="true">
-            <MudButton Class="mr-1" IconSize="Size.Small" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary" OnClick="() => SetButtonText(0)">Import</MudButton>
-            <MudButton Class="mr-1" IconSize="Size.Small" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary">Export</MudButton>
-            <MudButton IconSize="Size.Small" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick='() => NavigationManager.NavigateTo("products/add")'>New Product</MudButton>
+            <MudButton Class="mr-1" IconSize="Size.Small" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary" OnClick="() => OpenImportDialog()">Import</MudButton>
+            <MudButton Class="mr-1" IconSize="Size.Small" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary" OnClick="() => OpenExportDialog()">Export</MudButton>
+            <MudButton IconSize="Size.Small" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick='() => NavigationManager.NavigateTo("products/add")'>Add New</MudButton>
         </MudButtonGroup>
     </MudPaper>
     <MudTable ServerData="@(new Func<TableState, Task<TableData<Product>>>(ServerReload))"
-              Dense="true" Hover="true" @ref="table">
+              Dense="true" Hover="true" @ref="_table">
         <ToolBarContent>
             <MudGrid Class="d-none d-sm-flex">
                 <MudItem xs="12" md="5">
@@ -31,9 +33,9 @@
                 <MudItem xs="12" md="7">
                     <MudPaper Class="d-none d-sm-flex flex-row flex-grow-4 gap-2" Elevation="0">
                         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary">Import</MudButton>
-                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary">Export</MudButton>
-                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick='() => NavigationManager.NavigateTo("products/add")'>New Product</MudButton>
+                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary" OnClick="() => OpenImportDialog()">Import</MudButton>
+                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary" OnClick="() => OpenExportDialog()">Export</MudButton>
+                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick='() => NavigationManager.NavigateTo("products/add")'>Add New</MudButton>
                     </MudPaper>
                 </MudItem>
             </MudGrid>
@@ -54,15 +56,6 @@
             <MudTd>
                 <MudTooltip Text="Edit"><MudIconButton Color="Color.Primary" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Edit">Edit</MudIconButton></MudTooltip>
                 <MudTooltip Text="Delete"><MudIconButton Color="Color.Error" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Delete">Delete</MudIconButton></MudTooltip>
-                
-                
-                @* <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small">
-                    <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Color="Color.Primary">
-                        <MudMenuItem Icon="@Icons.Material.Filled.Edit">Edit</MudMenuItem>
-                        <MudMenuItem Icon="@Icons.Material.Filled.Delete">Delete</MudMenuItem>
-                        <MudMenuItem Icon="@Icons.Material.Filled.AccessAlarm">Others</MudMenuItem>
-                    </MudMenu>
-                </MudButtonGroup> *@
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
@@ -78,35 +71,17 @@
 </MudContainer>
 
 @code {
-    private string _buttonText = "New Product";
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "/"),
         new BreadcrumbItem("Products", href: null, disabled: true)
     };
 
-    // private IEnumerable<Meal> pagedData;
-    private IEnumerable<Product> pagedData;
-    private MudTable<Product> table;
+    private IEnumerable<Product>? _pagedData;
+    private MudTable<Product>? _table;
 
-    private int totalItems;
-    private string searchString = null;
-
-    private void SetButtonText(int id)
-    {
-        switch (id)
-        {
-            case 0:
-                _buttonText = "Export";
-                break;
-            case 1:
-                _buttonText = "Import";
-                break;
-            case 2:
-                _buttonText = "New Product";
-                break;
-        }
-    }
+    private int _totalItems;
+    private string _searchString = string.Empty;
 
     private async Task<TableData<Product>> ServerReload(TableState state)
     {
@@ -118,15 +93,39 @@
             sort.Add(state.SortLabel, sortDirection);
         }
 
-        var pageData = await this.ProductService.PaginateAsync(state.Page, state.PageSize, sort, this.searchString);
-        this.pagedData = pageData.Items;
-        this.totalItems = pageData.DataCount;
-        return new TableData<Product>() { TotalItems = totalItems, Items = pagedData };
+        var pageData = await this.ProductService.PaginateAsync(state.Page, state.PageSize, sort, this._searchString);
+        this._pagedData = pageData.Items;
+        this._totalItems = pageData.DataCount;
+        return new TableData<Product>() { TotalItems = _totalItems, Items = _pagedData };
     }
 
     private void OnSearch(string text)
     {
-        this.searchString = text;
-        this.table.ReloadServerData();
+        this._searchString = text;
+        if (this._table != null)
+        {
+            this._table.ReloadServerData();
+        }
+    }
+
+    private void OpenImportDialog()
+    {
+        var options = new DialogOptions {
+            MaxWidth = MaxWidth.Medium,
+            FullWidth = true,
+            DisableBackdropClick = true
+        };
+        DialogService.Show<ExportProductDialog<Product>>("Import Product", options);
+    }
+    private void OpenExportDialog()
+    {
+        var parameters = new DialogParameters<ExportProductDialog<Product>>(){ { x => x.FileName, "product.csv"}, { x => x.Data, _pagedData?.ToList()} };
+        var options = new DialogOptions
+            {
+                MaxWidth = MaxWidth.Medium,
+                FullWidth = true,
+                DisableBackdropClick = true
+            };
+        DialogService.Show<ExportProductDialog<Product>>("Export Product", parameters, options);
     }
 }
