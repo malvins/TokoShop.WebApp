@@ -1,17 +1,17 @@
 {
   "entryAssembly": "TokoShop.WebApp",
   "resources": {
-    "hash": "sha256-9dH9mu6+m4WP8k3ufo7csNo9OCsCr5aUNWRXjctroc4=",
+    "hash": "sha256-L/skeg/W+QaIf0GshXGKkzHcM/Cpn8NJ8snYwOzXZmg=",
     "runtime": {
       "dotnet.7.0.14.ca7xlsta1d.js": "sha256-uaU5/TwviWoAsWgI0ZSbvQHfvd/68Hv0+3Ty2dBxd+0=",
       "dotnet.timezones.blat": "sha256-t5xviiOQTfAsF0UDhmcyalKiaehUmf/sqJl97tmPM0M=",
-      "dotnet.wasm": "sha256-oiyQdz5/MUG2KFlomYXoMYqg5kOpgWKTcb3X3R1r8cU=",
+      "dotnet.wasm": "sha256-JrKpiWdcseYSF71Nb/kok7/u3SHc0qAzuQigSKZgw6s=",
       "icudt_CJK.dat": "sha256-SZLtQnRc0JkwqHab0VUVP7T3uBPSeYzxzDnpxPpUnHk=",
       "icudt_EFIGS.dat": "sha256-8fItetYY8kQ0ww6oxwTLiT3oXlBwHKumbeP2pRF4yTc=",
       "icudt_no_CJK.dat": "sha256-L7sV7NEYP37/Qr2FPCePo5cJqRgTXRwGHuwF5Q+0Nfs="
     },
     "assembly": {
-      "Microsoft.AspNetCore.Components.dll": "sha256-smef1OCdt6jogPZnUOWrtytNuegta2enzpjUSBx+hBQ=",
+      "Microsoft.AspNetCore.Components.dll": "sha256-LnLRHf8UAqkke1/hMKcP+BBeZFm9069VMrDWU+b9Q48=",
       "Microsoft.AspNetCore.Components.Forms.dll": "sha256-x1r2SEfZbQdWL/jJF9zLxxKodcsDOGrgMb6HJC9fZkY=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-4yD+SIBf1TDAF1EGzsgqMlJQpAh8srQMSIjkf6u+Ut8=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-aU33IHSRL2qfrPW9TwtDtpqQiT8rljDiS5av2unN1tE=",
@@ -36,7 +36,7 @@
       "Microsoft.Extensions.Primitives.dll": "sha256-37sOT2q/DrdnyQETx/pIpFbZORyL6Pjj8o9+QO4+G1c=",
       "Microsoft.JSInterop.dll": "sha256-XJ6Av7MMV1HfLHrDoKjFafDg3jBsx1BIPrhQiuP3TUg=",
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-0wK93XW6X4v3vvj9aswSF25HR8K+N15BXe/JmmTXODw=",
-      "MudBlazor.dll": "sha256-HV1SUTz9dnr+QdliDd5FjiSVN/rRKKLI2jkDKSepMGo=",
+      "MudBlazor.dll": "sha256-4zp9vj5r7krKrxLOslWdT72NEUxYTYrJ2x7lgWVIN6k=",
       "netstandard.dll": "sha256-QN2ReElbBOaLeglLSRAHadIATJ4Pl7czZ1Qx/iKsBgY=",
       "SQLitePCLRaw.batteries_v2.dll": "sha256-SpWcH6AEx3mi47y/8+z8SCs0KBG9Zt+IdSIBfqkcpOw=",
       "SQLitePCLRaw.core.dll": "sha256-jjSDOD/QnHlyKzPl4z/D58DPObtme8UT2gFIwbBDGHc=",
@@ -70,7 +70,7 @@
       "System.Net.NetworkInformation.dll": "sha256-suEKhF+ws58MZSL+3pKL7GLgUv1VHvj6vg3pJuta2pE=",
       "System.Net.Primitives.dll": "sha256-WNWbITTJdowwyDH3hcwgxXmeM0e4TvwrEhEQxzgD5Y0=",
       "System.ObjectModel.dll": "sha256-hpFpHc5KEy6KIAmRiKu11EKrQVFNeIkdO/H5ocAIutI=",
-      "System.Private.CoreLib.dll": "sha256-2QSJLhA+MzRM8FTgae+/9SHwTEx3D/2wrjGPmFZ3CyI=",
+      "System.Private.CoreLib.dll": "sha256-FBnpZ2J9/6qJSLAdwHEArMVCuTiaNjMN8ny1s+Z31+g=",
       "System.Private.Uri.dll": "sha256-fraK8wYCcLuxn4cAkSQbwKD4CuwNTn4Lb9gUSdMTVWI=",
       "System.Private.Xml.dll": "sha256-zlB+BO+W82fXR2xNuOzUqhwTXQJ5Ji/Em25c6avTWPE=",
       "System.Reflection.Emit.dll": "sha256-Sxb/t9ibUa0gHOzqkLpc+F3XQLCQ3p19Xz4f++SKsCg=",
@@ -85,16 +85,16 @@
       "System.Runtime.Serialization.Formatters.dll": "sha256-PLj9zmpAhXwDqcf5y+6dr80xcxkaWM/P7d+FygqbOTM=",
       "System.Security.Cryptography.dll": "sha256-JHkSwRnn/5PidcWPnj/Rndq7ReRUTzCEm08PEYpnIZg=",
       "System.Text.Encodings.Web.dll": "sha256-fUZLlE8riYTVJ2j0q5rE7BX5Bmy9morleerBmm9j9lc=",
-      "System.Text.Json.dll": "sha256-ffOJ3YzYEFCxKEWSlxb1H3TA4Bd+c2B7WtNQPBupz80=",
+      "System.Text.Json.dll": "sha256-js+5l7wxpVk2HcqQbrbp5To9m2XgK5ABs3yJpy0E7kQ=",
       "System.Text.RegularExpressions.dll": "sha256-2vxZ5wI6NP1jRCMvmftNFvLOiktzVOFrzopTj/2WrvM=",
       "System.Threading.dll": "sha256-83fsgaQ2e46xISjda8Gq81AIAuWzEyHVsjsJAafRDY8=",
       "System.Threading.Thread.dll": "sha256-lJwx0yh7+72LGXqeRQpdhnRvCLc3PvphJIm3jCnHK5Q=",
       "System.Transactions.Local.dll": "sha256-pLNBRc1RlGS2EZEh9fD40StATNs4SRVoLBMSBFUcMiU=",
-      "TokoShop.WebApp.dll": "sha256-0wymWX6s6shlZQMsFf/Szfr8b0YmFQKFPQPV5XCjLOI="
+      "TokoShop.WebApp.dll": "sha256-k/U3r5wj4h3sx7FZKR7Glug2S8wlsqOsoeIn7EjKdP0="
     },
     "runtimeAssets": {
       "dotnet.wasm": {
-        "hash": "sha256-oiyQdz5/MUG2KFlomYXoMYqg5kOpgWKTcb3X3R1r8cU=",
+        "hash": "sha256-JrKpiWdcseYSF71Nb/kok7/u3SHc0qAzuQigSKZgw6s=",
         "behavior": "dotnetwasm"
       }
     }
