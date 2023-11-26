@@ -17,13 +17,13 @@ namespace TokoShop.WebApp.Services
             StringBuilder csv = new StringBuilder();
 
             // Create header
-            var header = string.Join("|", typeof(T).GetProperties().Select(f => f.Name).ToArray());
+            var header = string.Join(",", typeof(T).GetProperties().Select(f => f.Name).ToArray());
             csv.AppendLine(header);
 
             // Create rows
             foreach (var item in list)
             {
-                var row = string.Join("|", typeof(T).GetProperties().Select(f => f.GetValue(item)));
+                var row = string.Join(",", typeof(T).GetProperties().Select(f => $"\"{f.GetValue(item)}\""));
                 csv.AppendLine(row);
             }
 

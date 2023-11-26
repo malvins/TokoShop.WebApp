@@ -15,32 +15,33 @@
         <MudItem xs="12" sm="7">
             <MudPaper Class="pa-4">
                 <MudText Align="Align.Center" Class="mb-n4">Product Form</MudText>
-                <MudForm @ref="form" @bind-IsValid="@IsSuccess" Model="@Product">
+                <MudForm @ref="_form" @bind-IsValid="@_isSuccess" Model="@Product">
                     <MudTextField T="string" @bind-Value="Product.Name" Label="Name" For="@(() => Product.Name)" />
+                    <MudNumericField T="double" @bind-Value="Product.BasePrice" Label="Price" For="@(() => Product.BasePrice)" />
                     <MudTextField T="string" @bind-Value="Product.Description" Label="Description" Lines="2" For="@(() => Product.Description)" />
                     <MudTextField T="string" @bind-Value="Product.ImageUrl" Label="Image Url" For="@(() => Product.ImageUrl)" />
                 </MudForm>
             </MudPaper>
             <MudPaper Class="d-flex pa-2 mt-4 flex-row-reverse">
-                <MudButton Variant="Variant.Filled" Disabled="@IsAnyError" Color="Color.Primary" DisableElevation="true" OnClick="@(async ()=> await this.SubmitForm())">Save</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(()=>form.ResetAsync())" Class="mx-2">Reset</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isAnyError" Color="Color.Primary" DisableElevation="true" OnClick="@(async ()=> await this.SubmitForm())">Save</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(()=>_form.ResetAsync())" Class="mx-2">Reset</MudButton>
             </MudPaper>
         </MudItem>
     </MudGrid>
 </MudContainer>
 
 @code {
-    public IEnumerable<Product>? Products;
-    public bool IsSuccess;
-    public bool IsAnyError;
-    public MudForm form;
-    public string ValidationResult = "failed";
+    private IEnumerable<Product>? _products;
+    private bool _isSuccess;
+    private bool _isAnyError;
+    private MudForm _form;
+    private string _validationResult = "failed";
 
     private ProductFormModel Product { get; set; } = new ProductFormModel();
     private List<BreadcrumbItem> BreadCrumbs = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Home", href: "/"),
-        new BreadcrumbItem("Products", href: "/products"),
+        new BreadcrumbItem("Home", href: "/TokoShopWebApp"),
+        new BreadcrumbItem("Products", href: "/TokoShopWebApp/products"),
         new BreadcrumbItem("Add Product", href: null, disabled: true)
     };
 
@@ -57,29 +58,33 @@
 
         [Required]
         public string ImageUrl { get; set; }
+
+        [Required]
+        public double BasePrice { get; set; }
     }
 
     private void ValidChanged()
     {
-        IsAnyError = !IsSuccess;
+        _isAnyError = !_isSuccess;
     }
 
     private async Task SubmitForm()
     {
-        this.form.Validate().Wait();
-        if (!this.IsSuccess)
+        this._form.Validate().Wait();
+        if (!this._isSuccess)
         {
-            this.ValidationResult = string.Join(";", form.Errors);
+            this._validationResult = string.Join(";", _form.Errors);
             return;
         }
 
-        ValidationResult = "oke";
+        this._validationResult = "oke";
         var product = new Product()
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = this.Product.Name,
                 Description = this.Product.Description,
-                ImageUrl = this.Product.ImageUrl
+                ImageUrl = this.Product.ImageUrl,
+                BasePrice = this.Product.BasePrice,
             };
         var result = await this.ProductService.AddProduct(product);
         if (result)
@@ -91,9 +96,9 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        if (this.Products?.Any() != true)
+        if (this._products?.Any() != true)
         {
-            this.Products = await this.ProductService.GetAllAsync();
+            this._products = await this.ProductService.GetAllAsync();
         }
     }
 }

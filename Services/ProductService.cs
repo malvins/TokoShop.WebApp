@@ -37,7 +37,7 @@ namespace TokoShop.WebApp.Services
             }
             return list;
         }
-        public async Task<Pageable<Product>> PaginateAsync(int page = 0, int take = 10, Dictionary<string, string> sorts = null, string filterText = null)
+        public async Task<Pageable<Product>> PaginateAsync(int page = 0, int take = 10, Dictionary<string, string>? sorts = null, string? filterText = null)
         {
             var result = new Pageable<Product>();
             try

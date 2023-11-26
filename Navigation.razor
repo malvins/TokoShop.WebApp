@@ -10,7 +10,7 @@
     <MudNavLink OnClick=@(() => this.GoTo("/products")) Match="NavLinkMatch.Prefix">Report</MudNavLink>
     <MudNavLink OnClick=@(() => this.GoTo("/about")) Match="NavLinkMatch.Prefix">About</MudNavLink>
 </MudNavMenu>
-@code{
+@code {
     private string HostUrl { set; get; } = string.Empty;
     protected override void OnInitialized()
     {

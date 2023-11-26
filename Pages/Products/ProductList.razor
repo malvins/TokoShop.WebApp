@@ -15,47 +15,65 @@
             <MudLink Href="@item.Href">@item.Text.ToUpper()</MudLink>
         </ItemTemplate>
     </MudBreadcrumbs>
-
-    <MudPaper Class="d-flex d-sm-none mt-2 mb-2 flex-row-reverse" Elevation="0">
-        <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" OverrideStyles="true">
-            <MudButton Class="mr-1" IconSize="Size.Small" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary" OnClick="() => OpenImportDialog()">Import</MudButton>
-            <MudButton Class="mr-1" IconSize="Size.Small" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary" OnClick="() => OpenExportDialog()">Export</MudButton>
-            <MudButton IconSize="Size.Small" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick='() => NavigationManager.NavigateTo("products/add")'>Add New</MudButton>
-        </MudButtonGroup>
-    </MudPaper>
-    <MudTable ServerData="@(new Func<TableState, Task<TableData<Product>>>(ServerReload))"
-              Dense="true" Hover="true" @ref="_table">
+    <MudHidden Breakpoint="Breakpoint.Xs" Invert="true">
+        <MudPaper Class="mt-2 mb-2  py-2 px-2 flex-row-reverse flex-grow-1 gap-2" Elevation="0">
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" IconSize="Size.Small" Size="Size.Small" StartIcon="@Icons.Material.Filled.Add" OnClick='() => NavigationManager.NavigateTo("products/add")'> Add</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Outlined" IconSize="Size.Small" Size="Size.Small" StartIcon="@Icons.Material.Filled.FileDownload" OnClick="() => OpenImportDialog()">Import</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Outlined" IconSize="Size.Small" Size="Size.Small" StartIcon="@Icons.Material.Filled.FileUpload" OnClick="() => OpenExportDialog()">Export</MudButton>
+        </MudPaper>
+    </MudHidden>
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<Product>>>(ServerReload))" SortLabel="Sort By" Dense="true" Hover="true" @ref="_table">
         <ToolBarContent>
-            <MudGrid Class="d-none d-sm-flex">
-                <MudItem xs="12" md="5">
-                    <MudText Typo="Typo.h6">Products</MudText>
-                </MudItem>
-                <MudItem xs="12" md="7">
-                    <MudPaper Class="d-none d-sm-flex flex-row flex-grow-4 gap-2" Elevation="0">
+            <MudHidden Breakpoint="Breakpoint.SmAndUp" Invert="true">
+                <MudGrid>
+                    <MudItem md="3" sm="2">
+                        <MudText Typo="Typo.h6">Products</MudText>
+                    </MudItem>
+                    <MudItem md="9" sm="10">
+                        <MudPaper Class="d-flex flex-row flex-grow-4 gap-2" Elevation="0">
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary" OnClick="() => OpenImportDialog()">Import</MudButton>
+                            <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary" OnClick="() => OpenExportDialog()">Export</MudButton>
+                            <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick='() => NavigationManager.NavigateTo("products/add")'>Add</MudButton>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+            </MudHidden>
+            <MudHidden Breakpoint="Breakpoint.Xs" Invert="true">
+                <MudGrid>
+                    <MudItem xs="12">
                         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileDownload" Color="Color.Primary" OnClick="() => OpenImportDialog()">Import</MudButton>
-                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileUpload" Color="Color.Primary" OnClick="() => OpenExportDialog()">Export</MudButton>
-                        <MudButton Size="Size.Small" IconSize="Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick='() => NavigationManager.NavigateTo("products/add")'>Add New</MudButton>
-                    </MudPaper>
-                </MudItem>
-            </MudGrid>
-            <MudGrid Class="d-block d-sm-none">
-                <MudItem xs="12">
-                    <MudTextField T="string" ValueChangedClass="mr-4" s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                </MudItem>
-            </MudGrid>
+                    </MudItem>
+                </MudGrid>
+            </MudHidden>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Image</MudTh>
-            <MudTh><MudTableSortLabel SortLabel="name" T="Product">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="Name" T="Product">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="Price" T="Product">Price</MudTableSortLabel></MudTh>
             <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Image"><MudImage Height="40" Src="@context.ImageUrl"></MudImage></MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd>
-                <MudTooltip Text="Edit"><MudIconButton Color="Color.Primary" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Edit">Edit</MudIconButton></MudTooltip>
-                <MudTooltip Text="Delete"><MudIconButton Color="Color.Error" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Delete">Delete</MudIconButton></MudTooltip>
+            <MudTd DataLabel="Price">@context.BasePrice</MudTd>
+            <MudTd DataLabel="Actions">
+                <MudHidden Breakpoint="Breakpoint.SmAndUp" Invert="true">
+                    <MudGrid Justify="Justify.FlexStart">
+                        <MudItem>
+                            <MudTooltip Text="Edit"><MudIconButton Color="Color.Primary" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Edit">Edit</MudIconButton></MudTooltip>
+                            <MudTooltip Text="Delete"><MudIconButton Color="Color.Error" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Delete">Delete</MudIconButton></MudTooltip>
+                        </MudItem>
+                    </MudGrid>
+                </MudHidden>
+                <MudHidden Breakpoint="Breakpoint.Xs" Invert="true">
+                    <MudGrid Justify="Justify.FlexEnd">
+                        <MudItem>
+                            <MudTooltip Text="Edit"><MudIconButton Color="Color.Primary" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Edit">Edit</MudIconButton></MudTooltip>
+                            <MudTooltip Text="Delete"><MudIconButton Color="Color.Error" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Delete">Delete</MudIconButton></MudTooltip>
+                        </MudItem>
+                    </MudGrid>
+                </MudHidden>
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
@@ -73,7 +91,7 @@
 @code {
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Home", href: "/TokoShopWebApp"),
         new BreadcrumbItem("Products", href: null, disabled: true)
     };
 
@@ -110,16 +128,17 @@
 
     private void OpenImportDialog()
     {
-        var options = new DialogOptions {
-            MaxWidth = MaxWidth.Medium,
-            FullWidth = true,
-            DisableBackdropClick = true
-        };
+        var options = new DialogOptions
+            {
+                MaxWidth = MaxWidth.Medium,
+                FullWidth = true,
+                DisableBackdropClick = true
+            };
         DialogService.Show<ExportProductDialog<Product>>("Import Product", options);
     }
     private void OpenExportDialog()
     {
-        var parameters = new DialogParameters<ExportProductDialog<Product>>(){ { x => x.FileName, "product.csv"}, { x => x.Data, _pagedData?.ToList()} };
+        var parameters = new DialogParameters<ExportProductDialog<Product>>() { { x => x.FileName, "product.csv" }, { x => x.Data, _pagedData?.ToList() } };
         var options = new DialogOptions
             {
                 MaxWidth = MaxWidth.Medium,
