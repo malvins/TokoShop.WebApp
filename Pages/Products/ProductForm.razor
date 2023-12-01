@@ -1,5 +1,7 @@
-﻿@page "/products/add"
-@page "/TokoShopWebApp/products/add"
+﻿@page "/product"
+@page "/product/{ProductId}"
+@page "/TokoShopWebApp/product"
+@page "/TokoShopWebApp/product/{ProductId}"
 @using System.ComponentModel.DataAnnotations;
 @using TokoShop.WebApp.Models.Products;
 @inject Services.IProductService ProductService
@@ -9,41 +11,109 @@
     <MudBreadcrumbs Items="BreadCrumbs">
         <ItemTemplate Context="item">
             <MudLink OnClick=@(() => NavigationManager.NavigateTo(item.Href ?? "/"))>@item.Text.ToUpper()</MudLink>
-        </ItemTemplate>
-    </MudBreadcrumbs>
-    <MudGrid>
-        <MudItem xs="12" sm="7">
-            <MudPaper Class="pa-4">
-                <MudText Align="Align.Center" Class="mb-n4">Product Form</MudText>
-                <MudForm @ref="_form" @bind-IsValid="@_isSuccess" Model="@Product">
-                    <MudTextField T="string" @bind-Value="Product.Name" Label="Name" For="@(() => Product.Name)" />
-                    <MudNumericField T="double" @bind-Value="Product.BasePrice" Label="Price" For="@(() => Product.BasePrice)" />
-                    <MudTextField T="string" @bind-Value="Product.Description" Label="Description" Lines="2" For="@(() => Product.Description)" />
-                    <MudTextField T="string" @bind-Value="Product.ImageUrl" Label="Image Url" For="@(() => Product.ImageUrl)" />
-                </MudForm>
+            </ItemTemplate>
+        </MudBreadcrumbs>
+        <MudPaper Class="d-flex pa-2 mb-4 flex-grow-1 gap-4">
+            <MudPaper Class="flex-1 d-flex" Elevation="0">
+                <MudText Typo="Typo.h6">Form</MudText>
             </MudPaper>
-            <MudPaper Class="d-flex pa-2 mt-4 flex-row-reverse">
-                <MudButton Variant="Variant.Filled" Disabled="@_isAnyError" Color="Color.Primary" DisableElevation="true" OnClick="@(async ()=> await this.SubmitForm())">Save</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(()=>_form.ResetAsync())" Class="mx-2">Reset</MudButton>
+            <MudPaper Class="flex-none d-flex flex-row-reverse" Width="40%" Elevation="0">
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(async ()=> await this.SubmitForm())">Save</MudButton>
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick='@(()=>NavigationManager.NavigateTo("products"))' Class="mx-2">Cancel</MudButton>
             </MudPaper>
-        </MudItem>
-    </MudGrid>
-</MudContainer>
 
-@code {
-    private IEnumerable<Product>? _products;
+        </MudPaper>
+        <MudGrid>
+            <MudItem xs="12" sm="12">
+                <MudPaper Class="pa-4">
+                    <MudForm @ref="_form" @bind-IsValid="@_isSuccess" Model="@Product">
+                        <MudTextField T="string" @bind-Value="Product.Name" Label="Name" For="@(() => Product.Name)" />
+                        <MudNumericField T="double" @bind-Value="Product.BasePrice" Label="Price" For="@(() => Product.BasePrice)" />
+                        <MudTextField T="string" @bind-Value="Product.Description" Label="Description" Lines="2" For="@(() => Product.Description)" />
+                        <MudTextField T="string" @bind-Value="Product.ImageUrl" Label="Image Url" For="@(() => Product.ImageUrl)" />
+                    </MudForm>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+
+    @code {
+    [Parameter]
+    public string? ProductId { get; set; }
+
     private bool _isSuccess;
-    private bool _isAnyError;
+    private bool _isEditForm;
     private MudForm _form;
     private string _validationResult = "failed";
 
     private ProductFormModel Product { get; set; } = new ProductFormModel();
-    private List<BreadcrumbItem> BreadCrumbs = new List<BreadcrumbItem>
+    private List<BreadcrumbItem> BreadCrumbs = new List<BreadcrumbItem>();
+
+    protected override async Task OnParametersSetAsync()
     {
-        new BreadcrumbItem("Home", href: "/TokoShopWebApp"),
-        new BreadcrumbItem("Products", href: "/TokoShopWebApp/products"),
-        new BreadcrumbItem("Add Product", href: null, disabled: true)
-    };
+        _isEditForm = !string.IsNullOrEmpty(ProductId);
+        if (_isEditForm)
+        {
+            try
+            {
+                var guid = Guid.Parse(ProductId);
+                var product = await this.ProductService.GetByIdAsync(guid);
+                if (product == null)
+                {
+                    NavigationManager.NavigateTo("product");
+                }
+                else
+                {
+                    this.Product = new ProductFormModel()
+                        {
+                            Id = product.Id,
+                            BasePrice = product.BasePrice,
+                            Description = product.Description,
+                            ImageUrl = product.ImageUrl,
+                            Name = product.Name
+                        };
+
+                }
+            }
+            catch (Exception)
+            {
+
+                NavigationManager.NavigateTo("product");
+            }
+        }
+        BreadCrumbs = new List<BreadcrumbItem>()
+                    {
+                        new BreadcrumbItem("Home", href: "/TokoShopWebApp"),
+                        new BreadcrumbItem("Products", href: "/TokoShopWebApp/products"),
+                        new BreadcrumbItem(_isEditForm ? Product.Name: "New Product", href: null, disabled: true)
+                    };
+    }
+
+    private async Task SubmitForm()
+    {
+        this._form.Validate().Wait();
+        if (!this._isSuccess)
+        {
+            this._validationResult = string.Join(";", _form.Errors);
+            return;
+        }
+
+        this._validationResult = "oke";
+        var product = new Product()
+            {
+                Id = _isEditForm ? this.Product.Id : Guid.NewGuid().ToString(),
+                Name = this.Product.Name,
+                Description = this.Product.Description,
+                ImageUrl = this.Product.ImageUrl,
+                BasePrice = this.Product.BasePrice,
+            };
+
+        var result = _isEditForm ? await this.ProductService.UpdateProduct(product) : await this.ProductService.AddProduct(product);
+        if (result)
+        {
+            NavigationManager.NavigateTo("products");
+        }
+    }
 
 
     public class ProductFormModel
@@ -61,44 +131,7 @@
 
         [Required]
         public double BasePrice { get; set; }
-    }
 
-    private void ValidChanged()
-    {
-        _isAnyError = !_isSuccess;
-    }
-
-    private async Task SubmitForm()
-    {
-        this._form.Validate().Wait();
-        if (!this._isSuccess)
-        {
-            this._validationResult = string.Join(";", _form.Errors);
-            return;
-        }
-
-        this._validationResult = "oke";
-        var product = new Product()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = this.Product.Name,
-                Description = this.Product.Description,
-                ImageUrl = this.Product.ImageUrl,
-                BasePrice = this.Product.BasePrice,
-            };
-        var result = await this.ProductService.AddProduct(product);
-        if (result)
-        {
-            NavigationManager.NavigateTo("products");
-        }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        if (this._products?.Any() != true)
-        {
-            this._products = await this.ProductService.GetAllAsync();
-        }
+        public string Id { get; set; }
     }
 }

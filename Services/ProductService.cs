@@ -22,6 +22,14 @@ namespace TokoShop.WebApp.Services
             return true;
         }
 
+        public async Task<bool> UpdateProduct(Product product)
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+            ctx.Products.Update(product);
+            await ctx.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
             var list = new List<Product>();
@@ -36,6 +44,22 @@ namespace TokoShop.WebApp.Services
                 throw;
             }
             return list;
+        }
+        public async Task<Product?> GetByIdAsync(Guid productId)
+        {
+            Product? product;
+            try
+            {
+                var id = productId.ToString();
+                using var ctx = await _dbContextFactory.CreateDbContextAsync();
+                product = await ctx.Products.Where(o => o.Id == id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            return product;
         }
         public async Task<Pageable<Product>> PaginateAsync(int page = 0, int take = 10, Dictionary<string, string>? sorts = null, string? filterText = null)
         {
