@@ -1,7 +1,7 @@
 {
   "entryAssembly": "TokoShop.WebApp",
   "resources": {
-    "hash": "sha256-L/skeg/W+QaIf0GshXGKkzHcM/Cpn8NJ8snYwOzXZmg=",
+    "hash": "sha256-3eBnDutYcQ/d9D941vIwfmC1uLDkMOfmeTkzz0LZ2PA=",
     "runtime": {
       "dotnet.7.0.14.ca7xlsta1d.js": "sha256-uaU5/TwviWoAsWgI0ZSbvQHfvd/68Hv0+3Ty2dBxd+0=",
       "dotnet.timezones.blat": "sha256-t5xviiOQTfAsF0UDhmcyalKiaehUmf/sqJl97tmPM0M=",
@@ -90,7 +90,7 @@
       "System.Threading.dll": "sha256-83fsgaQ2e46xISjda8Gq81AIAuWzEyHVsjsJAafRDY8=",
       "System.Threading.Thread.dll": "sha256-lJwx0yh7+72LGXqeRQpdhnRvCLc3PvphJIm3jCnHK5Q=",
       "System.Transactions.Local.dll": "sha256-pLNBRc1RlGS2EZEh9fD40StATNs4SRVoLBMSBFUcMiU=",
-      "TokoShop.WebApp.dll": "sha256-k/U3r5wj4h3sx7FZKR7Glug2S8wlsqOsoeIn7EjKdP0="
+      "TokoShop.WebApp.dll": "sha256-LfPm8unQ+NswS/WW/5bW6N4dTzUMyf/8bWGXq6Z3pZg="
     },
     "runtimeAssets": {
       "dotnet.wasm": {
