@@ -1,9 +1,9 @@
 ﻿@inject NavigationManager NavigationManager
-<MudNavMenu>
+<MudNavMenu Color="Color.Info">
     <MudNavLink Match="NavLinkMatch.All" OnClick=@(() => this.GoTo("/"))>Dashboard</MudNavLink>
     <MudNavGroup Title="Catalog">
-        <MudNavLink OnClick=@(() => this.GoTo("/products")) Match="NavLinkMatch.Prefix">Products</MudNavLink>
-        <MudNavLink OnClick=@(() => this.GoTo("/products")) Match="NavLinkMatch.Prefix">Collection</MudNavLink>
+        <MudNavLink OnClick=@(() => this.GoTo("/products")) Match="NavLinkMatch.Prefix">Product</MudNavLink>
+        <MudNavLink OnClick=@(() => this.GoTo("/products")) Match="NavLinkMatch.Prefix">Category</MudNavLink>
     </MudNavGroup>
     <MudNavLink OnClick=@(() => this.GoTo("/products")) Match="NavLinkMatch.Prefix">Order</MudNavLink>
     <MudNavLink OnClick=@(() => this.GoTo("/products")) Match="NavLinkMatch.Prefix">Inventory</MudNavLink>

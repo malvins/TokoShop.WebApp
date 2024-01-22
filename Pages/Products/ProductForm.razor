@@ -2,8 +2,10 @@
 @page "/product/{ProductId}"
 @page "/TokoShopWebApp/product"
 @page "/TokoShopWebApp/product/{ProductId}"
+
 @using System.ComponentModel.DataAnnotations;
 @using TokoShop.WebApp.Models.Products;
+
 @inject Services.IProductService ProductService
 @inject NavigationManager NavigationManager
 
@@ -23,28 +25,69 @@
             </MudPaper>
 
         </MudPaper>
-        <MudGrid>
-            <MudItem xs="12" sm="12">
-                <MudPaper Class="pa-4">
-                    <MudForm @ref="_form" @bind-IsValid="@_isSuccess" Model="@Product">
+
+        <MudForm @ref="_form" @bind-IsValid="@_isSuccess" Model="@Product">
+            <MudGrid>
+                <MudItem xs="12" md="8">
+                    <MudPaper Class="pa-4">
                         <MudTextField T="string" @bind-Value="Product.Name" Label="Name" For="@(() => Product.Name)" />
-                        <MudNumericField T="double" @bind-Value="Product.BasePrice" Label="Price" For="@(() => Product.BasePrice)" />
+                        <MudTextField T="double" @bind-Value="Product.BasePrice" Label="Price" For="@(() => Product.BasePrice)" />
                         <MudTextField T="string" @bind-Value="Product.Description" Label="Description" Lines="2" For="@(() => Product.Description)" />
                         <MudTextField T="string" @bind-Value="Product.ImageUrl" Label="Image Url" For="@(() => Product.ImageUrl)" />
-                    </MudForm>
+                        <MudSwitch T="bool" CheckedChanged="TrackInventoryChanged"
+                                   LabelPosition="LabelPosition.End"
+                                   Color="@Color.Primary"
+                                   Label="Track Inventory" Class="mt-2 mb-2">
+                        </MudSwitch>
+                        <MudInputLabel>@Product.Description</MudInputLabel>
+
+                        <MudTextField T="int" @bind-Value="Product.Stock" Label="Stock" For="@(() => Product.Stock)" Class="@(_isTrackInventory ? "d-block":"d-none")" />
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudPaper Class="pa-4">
+                        <MudText>Categories</MudText>
+                        @foreach (var sc in this.SelectedCategories)
+                        {
+                        <MudChip Color="this._randomChipColors[_random.Next(0,this._randomChipColors.Length)]" OnClose="RemoveCategory" Value="sc">@sc</MudChip>
+                        }
+                        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                        <MudAutocomplete T="string" Label="Search Categories ..."
+                                     SearchFunc="@SearchCategories"
+                                     ShowProgressIndicator="true"
+                                     ResetValueOnEmptyText="true"
+                                     CoerceText="true" CoerceValue="false"
+                                     AdornmentIcon="@Icons.Material.Filled.Search"
+                                     AdornmentColor="Color.Primary"
+                                     SelectValueOnTab="true"
+                                     ValueChanged="@SelectedCategoryChanged" />
+
                 </MudPaper>
+
             </MudItem>
         </MudGrid>
-    </MudContainer>
+    </MudForm>
+</MudContainer>
 
-    @code {
+@code {
     [Parameter]
     public string? ProductId { get; set; }
 
     private bool _isSuccess;
     private bool _isEditForm;
+    private bool _isTrackInventory = false;
     private MudForm _form;
     private string _validationResult = "failed";
+    private Random _random = new Random();
+    private Color[] _randomChipColors = { Color.Primary, Color.Info, Color.Success };
+
+    private string[] _states =
+    {
+        "Vegetables", "Dairy", "Meat", "Fish", "Condiments & Spices"
+        , "Snacks", "Beverages", "Frozen Foods"
+    };
+
+    private List<string> SelectedCategories = new List<string>();
 
     private ProductFormModel Product { get; set; } = new ProductFormModel();
     private List<BreadcrumbItem> BreadCrumbs = new List<BreadcrumbItem>();
@@ -106,6 +149,8 @@
                 Description = this.Product.Description,
                 ImageUrl = this.Product.ImageUrl,
                 BasePrice = this.Product.BasePrice,
+                EnableTrackInventory = this._isTrackInventory,
+                Stock = this.Product.Stock,
             };
 
         var result = _isEditForm ? await this.ProductService.UpdateProduct(product) : await this.ProductService.AddProduct(product);
@@ -113,6 +158,43 @@
         {
             NavigationManager.NavigateTo("products");
         }
+    }
+
+    private void TrackInventoryChanged()
+    {
+        _isTrackInventory = !_isTrackInventory;
+    }
+
+    private async Task<IEnumerable<string>> SearchCategories(string value)
+    {
+        await Task.Delay(5);
+
+        if (string.IsNullOrEmpty(value))
+            return new string[0];
+        return _states.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private void SelectedCategoryChanged(string value)
+    {
+
+        if (string.IsNullOrEmpty(value))
+            return;
+
+        if (this.SelectedCategories.Any(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase)))
+            return;
+
+        this.SelectedCategories.Add(value);
+    }
+
+    private void RemoveCategory(MudChip chip)
+    {
+        if (chip?.Value == null)
+            return;
+
+        var chipValue = chip?.Value?.ToString()?.ToLowerInvariant();
+        if (string.IsNullOrEmpty(chipValue))
+            return;
+        this.SelectedCategories.RemoveAll(x => x.ToLowerInvariant() == chipValue);
     }
 
 
@@ -131,6 +213,8 @@
 
         [Required]
         public double BasePrice { get; set; }
+
+        public int Stock { get; set; }
 
         public string Id { get; set; }
     }

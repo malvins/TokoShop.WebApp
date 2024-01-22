@@ -10,5 +10,7 @@ namespace TokoShop.WebApp.Models.Products
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public double BasePrice { get; set; }
+        public bool EnableTrackInventory { get; set; }
+        public int Stock { get; set; }
     }
 }
